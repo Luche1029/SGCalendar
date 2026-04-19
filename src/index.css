@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Pattern righe diagonali per impegni personali */
+.event-personal {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 4px,
+    rgba(0, 0, 0, 0.2) 4px,
+    rgba(0, 0, 0, 0.2) 8px
+  ) !important;
+  background-size: auto !important;
+}
+/* Header giorni vista settimana */
+.fc .fc-col-header-cell-cushion {
+  color: #000000 !important;
+}
+
+/* Numeri ore */
+.fc .fc-timegrid-slot-label-cushion {
+  color: #9CA3AF !important;
+}
+
+/* Giorno corrente highlight */
+.fc .fc-day-today .fc-col-header-cell-cushion {
+  color: #60A5FA !important;
+}
