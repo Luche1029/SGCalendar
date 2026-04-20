@@ -83,3 +83,74 @@ export async function saveMemberSync(eventId, memberId, googleEventId) {
     .upsert({ event_id: eventId, member_id: memberId, google_event_id: googleEventId })
   return { error }
 }
+
+// Recupera tutti i task con i membri assegnati
+export async function getTasks() {
+  const { data } = await supabase
+    .from('tasks')
+    .select(`
+      *,
+      task_assignments (
+        member_id
+      )
+    `)
+    .order('created_at')
+  return data || []
+}
+
+// Crea task
+export async function createTask(task, memberIds) {
+  const { data, error } = await supabase
+    .from('tasks')
+    .insert([task])
+    .select()
+    .single()
+
+  if (error) return { data: null, error }
+
+  if (memberIds?.length) {
+    await supabase.from('task_assignments').insert(
+      memberIds.map(mid => ({ task_id: data.id, member_id: mid }))
+    )
+  }
+
+  return { data, error: null }
+}
+
+// Aggiorna task
+export async function updateTask(id, updates, memberIds) {
+  const { data, error } = await supabase
+    .from('tasks')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) return { data: null, error }
+
+  if (memberIds !== undefined) {
+    await supabase.from('task_assignments').delete().eq('task_id', id)
+    if (memberIds.length) {
+      await supabase.from('task_assignments').insert(
+        memberIds.map(mid => ({ task_id: id, member_id: mid }))
+      )
+    }
+  }
+
+  return { data, error: null }
+}
+
+// Aggiorna solo lo status (per drag & drop)
+export async function updateTaskStatus(id, status) {
+  const { error } = await supabase
+    .from('tasks')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', id)
+  return { error }
+}
+
+// Elimina task
+export async function deleteTask(id) {
+  const { error } = await supabase.from('tasks').delete().eq('id', id)
+  return { error }
+}

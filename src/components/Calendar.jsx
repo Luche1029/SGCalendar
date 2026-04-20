@@ -149,21 +149,7 @@ const handleDateClick = (info) => {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col">
 
-      {/* Header */}
-      <header className="bg-gray-800 px-6 py-4 flex items-center justify-between shadow-lg">
-        <h1 className="text-xl font-bold text-white">🚀 SG Calendar</h1>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-400 text-sm">
-            Ciao, <span className="text-white font-semibold">{currentUser.name}</span>
-          </span>
-          <button
-            onClick={logout}
-            className="text-sm text-gray-400 hover:text-white transition-colors"
-          >
-            Esci →
-          </button>
-        </div>
-      </header>
+
 
       <div className="flex flex-1 overflow-hidden">
 
