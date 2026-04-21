@@ -154,3 +154,84 @@ export async function deleteTask(id) {
   const { error } = await supabase.from('tasks').delete().eq('id', id)
   return { error }
 }
+
+// --- JAVELIN ---
+
+export async function getJavelinBoards() {
+  const { data } = await supabase
+    .from('javelin_boards')
+    .select('*')
+    .order('created_at')
+  return data || []
+}
+
+export async function createJavelinBoard(board) {
+  const { data, error } = await supabase
+    .from('javelin_boards')
+    .insert([board])
+    .select()
+    .single()
+  return { data, error }
+}
+
+export async function deleteJavelinBoard(id) {
+  const { error } = await supabase
+    .from('javelin_boards')
+    .delete()
+    .eq('id', id)
+  return { error }
+}
+
+export async function getExperiments(boardId) {
+  const { data } = await supabase
+    .from('javelin_experiments')
+    .select('*')
+    .eq('board_id', boardId)
+    .order('number')
+  return data || []
+}
+
+export async function upsertExperiment(experiment) {
+  const { data, error } = await supabase
+    .from('javelin_experiments')
+    .upsert(experiment, { onConflict: 'board_id,number' })
+    .select()
+    .single()
+  return { data, error }
+}
+
+export async function getStickies(boardId) {
+  const { data } = await supabase
+    .from('javelin_stickies')
+    .select('*')
+    .eq('board_id', boardId)
+    .order('position')
+  return data || []
+}
+
+export async function createSticky(sticky) {
+  const { data, error } = await supabase
+    .from('javelin_stickies')
+    .insert([sticky])
+    .select()
+    .single()
+  return { data, error }
+}
+
+export async function updateSticky(id, updates) {
+  const { data, error } = await supabase
+    .from('javelin_stickies')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single()
+  return { data, error }
+}
+
+export async function deleteSticky(id) {
+  const { error } = await supabase
+    .from('javelin_stickies')
+    .delete()
+    .eq('id', id)
+  return { error }
+}

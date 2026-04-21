@@ -5,7 +5,7 @@ import LoginPage from './components/LoginPage'
 import Calendar from './components/Calendar'
 import KanbanBoard from './components/KanbanBoard'
 import { useState } from 'react'
-
+import JavelinBoard from './components/JavelinBoard'
 function AppContent() {
   const { currentUser, logout } = useAuth()
   const [view, setView] = useState('calendar')
@@ -41,6 +41,15 @@ function AppContent() {
             >
               📋 Task Board
             </button>
+            <button
+              onClick={() => setView('javelin')}
+              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors
+                ${view === 'javelin'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-700'}`}
+            >
+              🎯 Javelin
+            </button>
           </nav>
         </div>
 
@@ -59,8 +68,9 @@ function AppContent() {
 
       {/* Contenuto */}
       <div className="flex-1 overflow-hidden">
-        {view === 'calendar' ? <Calendar /> : <KanbanBoard />}
-      </div>
+{view === 'calendar' && <Calendar />}
+{view === 'kanban'   && <KanbanBoard />}
+{view === 'javelin'  && <JavelinBoard />}      </div>
     </div>
   )
 }
