@@ -235,3 +235,50 @@ export async function deleteSticky(id) {
     .eq('id', id)
   return { error }
 }
+
+// --- LEAN CANVAS ---
+
+export async function getLeanCanvases() {
+  const { data } = await supabase
+    .from('lean_canvases')
+    .select('*')
+    .order('created_at')
+  return data || []
+}
+
+export async function createLeanCanvas(canvas) {
+  const { data, error } = await supabase
+    .from('lean_canvases')
+    .insert([canvas])
+    .select()
+    .single()
+  return { data, error }
+}
+
+export async function deleteLeanCanvas(id) {
+  const { error } = await supabase
+    .from('lean_canvases')
+    .delete()
+    .eq('id', id)
+  return { error }
+}
+
+export async function getLeanCanvasBlocks(canvasId) {
+  const { data } = await supabase
+    .from('lean_canvas_blocks')
+    .select('*')
+    .eq('canvas_id', canvasId)
+  return data || []
+}
+
+export async function upsertLeanCanvasBlock(canvasId, blockType, content) {
+  const { data, error } = await supabase
+    .from('lean_canvas_blocks')
+    .upsert(
+      { canvas_id: canvasId, block_type: blockType, content, updated_at: new Date().toISOString() },
+      { onConflict: 'canvas_id,block_type' }
+    )
+    .select()
+    .single()
+  return { data, error }
+}
